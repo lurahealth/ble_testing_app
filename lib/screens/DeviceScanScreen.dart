@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:flutter_blue_test_applciation/dialogs/GetDatesDialog.dart';
+import 'package:flutter_blue_test_applciation/dialogs/ExportDialog.dart';
 import 'package:flutter_blue_test_applciation/models/DateRangeModel.dart';
 import 'package:flutter_blue_test_applciation/provideres/DevicesScanProvider.dart';
+import 'package:flutter_blue_test_applciation/provideres/ExportDIalogProvider.dart';
 import 'package:provider/provider.dart';
 
 class DeviceScanScreen extends StatelessWidget {
@@ -26,13 +27,7 @@ class DeviceScanWidget extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () async {
-              final DateRangeModel dates = await _exportDateRange(context);
-              if (dates != null) {
-                print("We have dates");
-                provider.exportData(dates);
-              } else {
-                print("No dates");
-              }
+              await _exportDateRange(context);
             },
           )
         ],
@@ -41,42 +36,43 @@ class DeviceScanWidget extends StatelessWidget {
         onRefresh: provider.scanForDevices,
         child: ListView.separated(
             separatorBuilder: (context, index) => Divider(
-              thickness: 1.5,
-            ),
+                  thickness: 1.5,
+                ),
             itemCount: provider.scanResults.length,
             itemBuilder: (BuildContext context, int index) {
-             ScanResult result = provider.scanResults[index];
-             BluetoothDevice device = result.device;
+              ScanResult result = provider.scanResults[index];
+              BluetoothDevice device = result.device;
               return Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: GestureDetector(
-                  onTap: () => provider.connectToDevice(context, device) ,
-                  child: Column(
-                    children: <Widget>[
-                      new Text("RSSI ${result.rssi}"),
-                      new Text("Name: ${device.name}"),
-                      new Text(device.type.toString())
-                    ],
-                  )
-                ),
+                    onTap: () => provider.connectToDevice(context, device),
+                    child: Column(
+                      children: <Widget>[
+                        new Text("RSSI ${result.rssi}"),
+                        new Text("Name: ${device.name}"),
+                        new Text(device.type.toString())
+                      ],
+                    )),
               );
             }),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: provider.scanForDevices ,
+        onPressed: provider.scanForDevices,
         child: Icon(Icons.bluetooth_searching),
-        ),
+      ),
     );
   }
 
-  Future<DateRangeModel> _exportDateRange(BuildContext context) async {
-    return showDialog<DateRangeModel>(
+  Future<void> _exportDateRange(BuildContext context) async {
+    return showDialog<void>(
         context: context,
         barrierDismissible: true,
         // dialog is dismissible with a tap on the barrier
         builder: (BuildContext context) {
-          return GetDateDialog();
+          return ChangeNotifierProvider<ExportDialogProvider>(
+            create: (_) => ExportDialogProvider(),
+            child: ExportDialog(),
+          );
         });
   }
 }
-

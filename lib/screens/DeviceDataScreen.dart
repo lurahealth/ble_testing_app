@@ -57,7 +57,10 @@ class DeviceDateWidget extends StatelessWidget {
           SizedBox(height: 20,),
           ColumnHeaderWidget(),
           DataTableWidget(provider),
-          ButtonRow(provider),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ButtonRow(provider),
+          ),
           AnimatedContainer(
             color: (deviceState == BluetoothDeviceState.connected)
                 ? Colors.green // if connected to device, show green

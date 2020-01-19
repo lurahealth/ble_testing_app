@@ -70,41 +70,9 @@ class DeviceScanProvider with ChangeNotifier {
     Navigator.pushNamed(context, "/deviceDataScreen", arguments: device);
   }
 
-  Future<void> exportData(DateRangeModel dates) async {
-    int from = dates.from.millisecondsSinceEpoch;
-    int to = dates.to.millisecondsSinceEpoch;
 
-    DBProvider db = DBProvider.db;
-    List<Map<String, dynamic>> rows = await db.getDataByDateRange(from, to);
-    List<List<dynamic>> data = [];
-    data.add(["time","pH","temperature","battery","connection time","notes"]);
-    print(rows.length);
-    rows.forEach((row){
-      DateTime time = DateTime.fromMillisecondsSinceEpoch(row[StringUtils.TIME_STAMP]);
-      String timeSTRING = StringUtils.dateTimeFormat.format(time);
-      data.add([timeSTRING,row[StringUtils.PH], row[StringUtils.TEMPERATURE], row[StringUtils.BATTERY], row[StringUtils.CONNETION_TIME], row[StringUtils.NOTES]]);
-    });
 
-    String csv = const ListToCsvConverter().convert(data);
-    var file = await _localFile;
-    await file.writeAsString('$csv');
 
-    final ByteData bytes = await rootBundle.load(file.path);
-
-    await Share.file('Csv export', 'csv.txt', bytes.buffer.asUint8List(), 'text/csv') 
-
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/csv.txt');
-  }
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
 
 
 }

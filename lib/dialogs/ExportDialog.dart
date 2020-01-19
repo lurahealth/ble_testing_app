@@ -1,20 +1,20 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_test_applciation/models/DateRangeModel.dart';
-import 'package:flutter_blue_test_applciation/provideres/DeviceDataProvider.dart';
+import 'package:flutter_blue_test_applciation/provideres/ExportDIalogProvider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class GetDateDialog extends StatelessWidget {
+class ExportDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
 
+    final ExportDialogProvider provider = Provider.of<ExportDialogProvider>(context);
+
     final format = DateFormat("yyyy-MM-dd HH:mm");
-    DateTime fromDate;
-    DateTime toDate;
 
     final fromDateField = DateTimeField(
-      onChanged: ( DateTime value) => fromDate = value,
+      onChanged: provider.setFromDate ,
       decoration: InputDecoration(
           labelText: "From",
       ),
@@ -39,7 +39,7 @@ class GetDateDialog extends StatelessWidget {
     );
 
     final toDateField = DateTimeField(
-      onChanged: (DateTime value) => toDate = value,
+      onChanged: provider.setToDate ,
       decoration: InputDecoration(
         labelText: "To",
       ),
@@ -64,9 +64,7 @@ class GetDateDialog extends StatelessWidget {
     );
 
     final exportButton = FlatButton(
-      onPressed: () {
-        Navigator.pop(context, DateRangeModel(fromDate, toDate));
-      },
+      onPressed: () => provider.exportData(context),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -93,32 +91,49 @@ class GetDateDialog extends StatelessWidget {
       ),
     );
 
+    final exportMessage = new Text(
+      "Export in progress, this could take a while. Please be patient",
+      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+      textAlign: TextAlign.center,
+    );
+
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+      content: Stack(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Text(
-              "Set date range for sensor data export",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-              ),),
+          Visibility(
+            visible: provider.exporting,
+            child: exportMessage,
           ),
-          SizedBox(height: 40,),
-          fromDateField,
-          SizedBox(height: 20,),
-          toDateField,
-          SizedBox(height: 20,),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              cancelButton,
-              exportButton,
-            ],
+          Visibility(
+            visible: !provider.exporting ,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    "Set date range for sensor data export",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),),
+                ),
+                SizedBox(height: 40,),
+                fromDateField,
+                SizedBox(height: 20,),
+                toDateField,
+                SizedBox(height: 20,),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    cancelButton,
+                    exportButton,
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

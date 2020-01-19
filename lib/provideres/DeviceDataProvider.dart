@@ -93,12 +93,12 @@ class DeviceDataProvider with ChangeNotifier {
     setStartAndEndTime(now);
     DataModel dataModel = new DataModel(
         pH, battery, temperature, connectionTime, now, notes);
+    if(notes != null){
+      print(notes);
+    }
     DBProvider.db.insertSensorData(dataModel);
-    notes = null;
+//    notes = null;
     allData.insert(0, dataModel);
-//    if(allData.length > 400){
-//      deleteOldData();
-//    }
     temperatureData.add(SplineData.fromLiveData(now, temperature));
     pHData.add(SplineData.fromLiveData(now, pH));
     batteryData.add(SplineData.fromLiveData(now, battery));
@@ -143,15 +143,6 @@ class DeviceDataProvider with ChangeNotifier {
       calculateMixMaxTimes();
     }
     notifyListeners();
-  }
-
-  DataRow makeDataRow(DataModel dataModel) {
-    return DataRow(cells: [
-      DataCell(Text(StringUtils.dateTimeFormat.format(dataModel.timeStamp))),
-      DataCell(Text(dataModel.pH.toString())),
-      DataCell(Text(dataModel.temperature.toString())),
-      DataCell(Text(dataModel.battery.toString()))
-    ]);
   }
 
   List<DataColumn> getColumns() {

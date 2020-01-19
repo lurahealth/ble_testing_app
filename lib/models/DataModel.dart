@@ -23,7 +23,7 @@ class DataModel{
       StringUtils.TEMPERATURE: temperature,
       StringUtils.CONNETION_TIME: connectionTime,
       StringUtils.TIME_STAMP: timeStamp.millisecondsSinceEpoch,
-
+      StringUtils.NOTES: notes
     };
   }
 

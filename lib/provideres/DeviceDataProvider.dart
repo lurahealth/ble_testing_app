@@ -93,12 +93,12 @@ class DeviceDataProvider with ChangeNotifier {
     setStartAndEndTime(now);
     DataModel dataModel = new DataModel(
         pH, battery, temperature, connectionTime, now, notes);
+    if(notes != null){
+      print(notes);
+    }
     DBProvider.db.insertSensorData(dataModel);
-    notes = null;
+//    notes = null;
     allData.insert(0, dataModel);
-//    if(allData.length > 400){
-//      deleteOldData();
-//    }
     temperatureData.add(SplineData.fromLiveData(now, temperature));
     pHData.add(SplineData.fromLiveData(now, pH));
     batteryData.add(SplineData.fromLiveData(now, battery));

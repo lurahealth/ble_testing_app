@@ -12,9 +12,10 @@ class ButtonRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
       children: <Widget>[
         RaisedButton(
-          color: Colors.green,
+          color: Colors.lightBlue ,
           onPressed: () async {
             final String note = await _notesDialog(context);
             if(note != null && note.length > 0){
@@ -27,26 +28,19 @@ class ButtonRow extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Icon(Icons.note_add),
+              SizedBox(width: 10,),
               Text("Add note"),
             ],
           ),
         ),
         RaisedButton(
-          color: Colors.green,
+          color: Colors.lightBlue ,
           onPressed: () => provider.disconnectDevice(context),
-//          onPressed: () async {
-//            final DateRangeModel dates = await _exportDateRange(context);
-//            if(dates != null){
-//              print("We have dates");
-//              provider.exportData(dates);
-//            }else{
-//              print("No dates");
-//            }
-//          },
           child: Row(
             children: <Widget>[
-              Icon(Icons.share),
-              Text("Export"),
+              Icon(Icons.bluetooth_disabled),
+              SizedBox(width: 10,),
+              Text("Disconnect"),
             ],
           ),
         ),

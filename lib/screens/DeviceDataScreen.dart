@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_blue_test_applciation/dialogs/ExportDialog.dart';
 import 'package:flutter_blue_test_applciation/provideres/DeviceDataProvider.dart';
 import 'package:flutter_blue_test_applciation/provideres/DeviceStateProvider.dart';
+import 'package:flutter_blue_test_applciation/provideres/ExportDIalogProvider.dart';
 import 'package:flutter_blue_test_applciation/widgets/ButtonRow.dart';
 import 'package:flutter_blue_test_applciation/widgets/DataTableWidget.dart';
 import 'package:flutter_blue_test_applciation/widgets/GraphContolWidget.dart';
@@ -20,7 +22,7 @@ class DeviceDateScreen extends StatelessWidget {
       providers: [
         StreamProvider(
             create: (_) => DeviceStateProvider(device).connectToDevice(),
-            initialData: BluetoothDeviceState.disconnected),
+            initialData: BluetoothDeviceState.connecting),
         ChangeNotifierProvider(
           create: (_) => DeviceDataProvider(device),
         )

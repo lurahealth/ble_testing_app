@@ -145,15 +145,6 @@ class DeviceDataProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  DataRow makeDataRow(DataModel dataModel) {
-    return DataRow(cells: [
-      DataCell(Text(StringUtils.dateTimeFormat.format(dataModel.timeStamp))),
-      DataCell(Text(dataModel.pH.toString())),
-      DataCell(Text(dataModel.temperature.toString())),
-      DataCell(Text(dataModel.battery.toString()))
-    ]);
-  }
-
   List<DataColumn> getColumns() {
     return [
       DataColumn(

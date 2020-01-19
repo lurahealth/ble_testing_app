@@ -23,7 +23,7 @@ class DataTableWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   getText(
-                      StringUtils.dateTimeFormat.format(dataModel.timeStamp)),
+                      StringUtils.dataTableTimeFormat.format(dataModel.timeStamp)),
                   getText(dataModel.pH.toString()),
                   getText(dataModel.temperature.toString()),
                   getText(dataModel.battery.toString())

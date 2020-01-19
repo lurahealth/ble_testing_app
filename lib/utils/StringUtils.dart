@@ -31,7 +31,8 @@ class StringUtils{
   static final String RX_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
   // Time format
-  static final DateFormat dateTimeFormat = DateFormat("dd:MMMMM HH:mm:ss");
+  static final DateFormat dataTableTimeFormat = DateFormat("HH:mm:ss");
+  static final DateFormat csvDateTimeFormat = DateFormat("dd.MMMMM HH:mm:ss");
 
   //Style
   static final TextStyle style = TextStyle(fontSize: 15);

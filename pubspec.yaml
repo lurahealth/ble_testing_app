@@ -26,7 +26,6 @@ dependencies:
   provider: 4.0.1
   flutter_secure_storage: 3.3.1+1
   esys_flutter_share: 1.0.2
-  flutter_blue: 0.6.3+1
   permission_handler: 4.1.0
   sqflite: 1.2.0
   path_provider: 1.5.1
@@ -35,6 +34,10 @@ dependencies:
   intl: 0.16.0
   datetime_picker_formfield: 1.0.0
   csv: 4.0.3
+  flutter_blue:
+    git:
+      url: git://github.com/julienzarka/flutter_blue.git
+      commit: b0ae75079b82e8c4f049d0940462ab86faa517ad
 
 dev_dependencies:
   flutter_test:

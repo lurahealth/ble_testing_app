@@ -30,6 +30,8 @@ class DeviceDataProvider with ChangeNotifier {
   DateTime max = currentTime.add(Duration(seconds: 5));
   bool dataLoaded = false;
   bool autoScroll = true;
+  String connectionButtonText = "Disconnect";
+  bool connected = false;
 
   DateTime startTime;
   DateTime endTime;
@@ -39,6 +41,7 @@ class DeviceDataProvider with ChangeNotifier {
   Future<void> getData() async {
     if (!dataLoaded) {
       dataLoaded = true;
+      connected = true;
       print("getting data");
       // get list of services from device
       List<BluetoothService> services = await device.discoverServices();
@@ -219,7 +222,13 @@ class DeviceDataProvider with ChangeNotifier {
     this.notes = note;
   }
 
-  void disconnectDevice(BuildContext context) {
-    print("Disconnecting device press");
+  Future<void> toggleDeviceState() async {
+    connected = false;
+    device.disconnect();
+//    connectionButtonText = "Connect";
+//    notifyListeners();
   }
+
+
+
 }

@@ -7,7 +7,7 @@ class DeviceStateProvider with ChangeNotifier{
   DeviceStateProvider(this.device);
 
   Stream<BluetoothDeviceState> connectToDevice(){
-    device.connect(timeout: Duration(seconds: 200));
+    device.connect(timeout: Duration(seconds: 200), autoConnect: false);
     return device.state;
   }
 }

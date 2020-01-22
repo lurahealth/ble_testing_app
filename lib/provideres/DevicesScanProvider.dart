@@ -29,7 +29,10 @@ class DeviceScanProvider with ChangeNotifier {
   void onScanResult(List<ScanResult> scanResults) {
     scanResults.forEach((result){
       String name = result.device.name;
-      if(name != null && name.length > 0 && !(this.scanResults.contains(result))){
+      if(name != null &&
+         name.length > 0 &&
+         !(this.scanResults.contains(result)) &&
+          name.contains("Lura_Health") ){
         this.scanResults.add(result);
       }
     });

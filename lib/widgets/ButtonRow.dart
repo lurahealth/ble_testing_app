@@ -12,53 +12,55 @@ class ButtonRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
-      children: <Widget>[
-        RaisedButton(
-          color: Colors.lightBlue ,
-          onPressed: () async {
-            final String note = await _notesDialog(context);
-            if(note != null && note.length > 0){
-              print("We have a note: $note");
-              provider.saveNote(note);
-            }else{
-              print("No notes");
-            }
-          },
-          child: Row(
-            children: <Widget>[
-              Icon(Icons.note_add),
-              SizedBox(width: 10,),
-              Text("Add note"),
-            ],
+    return FittedBox(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center ,
+        children: <Widget>[
+          RaisedButton(
+            color: Colors.lightBlue ,
+            onPressed: () async {
+              final String note = await _notesDialog(context);
+              if(note != null && note.length > 0){
+                print("We have a note: $note");
+                provider.saveNote(note);
+              }else{
+                print("No notes");
+              }
+            },
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.note_add),
+                SizedBox(width: 10,),
+                Text("Add note"),
+              ],
+            ),
           ),
-        ),
-        RaisedButton(
-          color: Colors.lightBlue ,
-          onPressed: () => provider.toggleDeviceState(),
-          child: Row(
-            children: <Widget>[
-              Icon(Icons.bluetooth_disabled),
-              SizedBox(width: 10,),
-              Text(provider.connectionButtonText),
-            ],
+          RaisedButton(
+            color: Colors.lightBlue ,
+            onPressed: () => provider.toggleDeviceState(),
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.bluetooth_disabled),
+                SizedBox(width: 10,),
+                Text(provider.connectionButtonText),
+              ],
+            ),
           ),
-        ),
-        RaisedButton(
-          color: Colors.lightBlue ,
-          onPressed: () async {
-            await _exportDateRange(context);
-          },
-          child: Row(
-            children: <Widget>[
-              Icon(Icons.share),
-              SizedBox(width: 10,),
-              Text("Export"),
-            ],
+          RaisedButton(
+            color: Colors.lightBlue ,
+            onPressed: () async {
+              await _exportDateRange(context);
+            },
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.share),
+                SizedBox(width: 10,),
+                Text("Export"),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

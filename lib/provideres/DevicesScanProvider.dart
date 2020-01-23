@@ -20,7 +20,7 @@ class DeviceScanProvider with ChangeNotifier {
         _flutterBlue.stopScan();
       }
       // Start scanning
-      _flutterBlue.startScan(timeout: Duration(seconds: 4));
+      _flutterBlue.startScan(timeout: Duration(seconds: 10));
       _flutterBlue.scanResults.listen(onScanResult);
     } else {
       print("No Location permission");

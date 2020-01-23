@@ -9,7 +9,10 @@ class DeviceScanProvider with ChangeNotifier {
   FlutterBlue _flutterBlue;
 
   Future<String> scanForDevices() async {
-    if (await permissionCheck(PermissionGroup.locationAlways)) {
+    print("Scanning for devices");
+    bool locationPermissions = await permissionCheck(PermissionGroup.locationAlways);
+    print(locationPermissions);
+    if (locationPermissions) {
       scanResults = [];
       if (_flutterBlue == null) {
         _flutterBlue = FlutterBlue.instance;
@@ -31,8 +34,7 @@ class DeviceScanProvider with ChangeNotifier {
       String name = result.device.name;
       if(name != null &&
          name.length > 0 &&
-         !(this.scanResults.contains(result)) &&
-          name.contains("Lura_Health") ){
+         !(this.scanResults.contains(result))){
         this.scanResults.add(result);
       }
     });
@@ -65,10 +67,4 @@ class DeviceScanProvider with ChangeNotifier {
     }
     Navigator.pushNamed(context, "/deviceDataScreen", arguments: device);
   }
-
-
-
-
-
-
 }

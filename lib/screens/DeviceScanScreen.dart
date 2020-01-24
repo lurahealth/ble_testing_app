@@ -29,6 +29,10 @@ class DeviceScanWidget extends StatelessWidget {
             onPressed: () async {
               await _exportDateRange(context);
             },
+          ),
+          IconButton(
+              icon: Icon(Icons.add),
+              onPressed: provider.scheduleBackgroundTask
           )
         ],
       ),

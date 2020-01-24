@@ -32,8 +32,13 @@ class StringUtils{
 
   // Time format
   static final DateFormat dataTableTimeFormat = DateFormat("HH:mm:ss");
-  static final DateFormat csvDateTimeFormat = DateFormat("dd.MMMMM HH:mm:ss");
+  static final DateFormat csvDateTimeFormat = DateFormat("dd.MMMMM. HH:mm:ss");
 
   //Style
   static final TextStyle style = TextStyle(fontSize: 15);
+
+  // Notifications
+  static final CHANNEL_ID = "24012020";
+  static final CHANNEL_NAME = "Laura Health Data";
+  static final CHANNEL_DESCRIPTION = "Displayes data from the Laura Health sensor";
 }

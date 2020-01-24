@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_blue_test_applciation/utils/NotificationCommon.dart';
+import 'package:flutter_blue_test_applciation/utils/StringUtils.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io' show File, Platform, sleep;
 
@@ -7,6 +10,8 @@ class DeviceScanProvider with ChangeNotifier {
   List<ScanResult> scanResults = [];
   PermissionHandler _permissionHandler;
   FlutterBlue _flutterBlue;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  int count = 0;
 
   Future<String> scanForDevices() async {
     print("Scanning for devices");
@@ -67,4 +72,15 @@ class DeviceScanProvider with ChangeNotifier {
     }
     Navigator.pushNamed(context, "/deviceDataScreen", arguments: device);
   }
+
+  Future<void> scheduleBackgroundTask() async {
+
+    await NotificationCommon()
+              .flutterLocalNotificationsPlugin
+              .show(0, 'Notification test', 'Notication called $count times',
+                    NotificationCommon.notificationDetails());
+
+    count++;
+  }
+
 }

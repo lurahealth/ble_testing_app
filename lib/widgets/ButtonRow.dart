@@ -14,49 +14,59 @@ class ButtonRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return FittedBox(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center ,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          RaisedButton(
-            color: Colors.lightBlue ,
-            onPressed: () async {
-              final String note = await _notesDialog(context);
-              if(note != null && note.length > 0){
-                print("We have a note: $note");
-                provider.saveNote(note);
-              }else{
-                print("No notes");
-              }
-            },
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.note_add),
-                SizedBox(width: 10,),
-                Text("Add note"),
-              ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RaisedButton(
+              color: Colors.lightBlue ,
+              onPressed: () async {
+                final String note = await _notesDialog(context);
+                if(note != null && note.length > 0){
+                  print("We have a note: $note");
+                  provider.saveNote(note);
+                }else{
+                  print("No notes");
+                }
+              },
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.note_add),
+                  SizedBox(width: 10,),
+                  Text("Add note"),
+                ],
+              ),
             ),
           ),
-          RaisedButton(
-            color: Colors.lightBlue ,
-            onPressed: () => provider.toggleDeviceState(),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.bluetooth_disabled),
-                SizedBox(width: 10,),
-                Text(provider.connectionButtonText),
-              ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RaisedButton(
+              color: Colors.lightBlue ,
+              onPressed: () => provider.toggleDeviceState(),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.bluetooth_disabled),
+                  SizedBox(width: 10,),
+                  Text(provider.connectionButtonText),
+                ],
+              ),
             ),
           ),
-          RaisedButton(
-            color: Colors.lightBlue ,
-            onPressed: () async {
-              await _exportDateRange(context);
-            },
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.share),
-                SizedBox(width: 10,),
-                Text("Export"),
-              ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RaisedButton(
+
+              color: Colors.lightBlue ,
+              onPressed: () async {
+                await _exportDateRange(context);
+              },
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.share),
+                  SizedBox(width: 10,),
+                  Text("Export"),
+                ],
+              ),
             ),
           ),
         ],

@@ -9,7 +9,10 @@ class DeviceScanProvider with ChangeNotifier {
   FlutterBlue _flutterBlue;
 
   Future<String> scanForDevices() async {
-    if (await permissionCheck(PermissionGroup.locationAlways)) {
+    print("Scanning for devices");
+    bool locationPermissions = await permissionCheck(PermissionGroup.locationAlways);
+    print(locationPermissions);
+    if (locationPermissions) {
       scanResults = [];
       if (_flutterBlue == null) {
         _flutterBlue = FlutterBlue.instance;
@@ -17,7 +20,7 @@ class DeviceScanProvider with ChangeNotifier {
         _flutterBlue.stopScan();
       }
       // Start scanning
-      _flutterBlue.startScan(timeout: Duration(seconds: 4));
+      _flutterBlue.startScan(timeout: Duration(seconds: 10));
       _flutterBlue.scanResults.listen(onScanResult);
     } else {
       print("No Location permission");
@@ -29,7 +32,9 @@ class DeviceScanProvider with ChangeNotifier {
   void onScanResult(List<ScanResult> scanResults) {
     scanResults.forEach((result){
       String name = result.device.name;
-      if(name != null && name.length > 0 && !(this.scanResults.contains(result))){
+      if(name != null &&
+         name.length > 0 &&
+         !(this.scanResults.contains(result))){
         this.scanResults.add(result);
       }
     });
@@ -62,10 +67,4 @@ class DeviceScanProvider with ChangeNotifier {
     }
     Navigator.pushNamed(context, "/deviceDataScreen", arguments: device);
   }
-
-
-
-
-
-
 }

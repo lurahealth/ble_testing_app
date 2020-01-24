@@ -47,12 +47,14 @@ class DeviceScanWidget extends StatelessWidget {
                 child: GestureDetector(
                     onTap: () => provider.connectToDevice(context, device),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         new Text("RSSI ${result.rssi}"),
                         new Text("Name: ${device.name}"),
                         new Text(device.type.toString())
                       ],
-                    )),
+                    ),
+                ),
               );
             }),
       ),

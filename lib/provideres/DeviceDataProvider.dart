@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class DeviceDataProvider with ChangeNotifier {
   bool autoScroll = true;
   String connectionButtonText = "Disconnect";
   bool connected = false;
+  StreamSubscription<List<int>> bluetoothDataubscription;
 
   DateTime startTime;
   DateTime endTime;
@@ -56,7 +58,10 @@ class DeviceDataProvider with ChangeNotifier {
       // get the Rx service by uts UUID
       BluetoothCharacteristic rx = getRxCharacteristic(characteristics);
 
-      rx.value.listen(onDataReceived, onError: onErrorReceivingData);
+      bluetoothDataubscription = rx.value.listen(onDataReceived,
+                                                 onError: onErrorReceivingData,
+                                                 onDone: onDoneCalled
+      );
 
       // not sure what this does, but we don't get anything out of the device till this is set
       rx.setNotifyValue(true);
@@ -68,6 +73,11 @@ class DeviceDataProvider with ChangeNotifier {
     temperature = null;
     battery = null;
     connectionTime = null;
+  }
+
+  void onDoneCalled(){
+    print("on done called");
+    bluetoothDataubscription.cancel();
   }
 
   void onDataReceived(List<int> value) {
@@ -100,7 +110,7 @@ class DeviceDataProvider with ChangeNotifier {
       print(notes);
     }
     DBProvider.db.insertSensorData(dataModel);
-//    notes = null;
+    notes = null;
     allData.insert(0, dataModel);
     temperatureData.add(SplineData.fromLiveData(now, temperature));
     pHData.add(SplineData.fromLiveData(now, pH));
@@ -108,11 +118,12 @@ class DeviceDataProvider with ChangeNotifier {
     connectionTimeData.add(SplineData.fromLiveData(now, connectionTime));
   }
 
-  void onErrorReceivingData(error) {
+  onErrorReceivingData(error) {
     print("Error receiving data: $error");
     error = true;
     errorMessage = error.toString();
     notifyListeners();
+    bluetoothDataubscription.cancel();
   }
 
   BluetoothService getUartService(List<BluetoothService> services) =>
@@ -225,6 +236,7 @@ class DeviceDataProvider with ChangeNotifier {
   Future<void> toggleDeviceState() async {
     connected = false;
     device.disconnect();
+    await bluetoothDataubscription.cancel();
 //    connectionButtonText = "Connect";
 //    notifyListeners();
   }

@@ -62,9 +62,9 @@ class DeviceScanProvider with ChangeNotifier {
 
   void connectToDevice(BuildContext context, BluetoothDevice device) {
     _flutterBlue.stopScan();
-    if (Platform.isAndroid) {
-      sleep(const Duration(seconds: 1));
-    }
+//    if (Platform.isAndroid) {
+//      sleep(const Duration(seconds: 1));
+//    }
     Navigator.pushNamed(context, "/deviceDataScreen", arguments: device);
   }
 }

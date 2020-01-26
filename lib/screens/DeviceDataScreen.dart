@@ -41,6 +41,8 @@ class DeviceDateWidget extends StatelessWidget {
         Provider.of<DeviceDataProvider>(context);
     if (deviceState == BluetoothDeviceState.connected) {
       provider.getData();
+    }else if(provider.connected){
+      provider.disconnect();
     }
 
     return Scaffold(

@@ -32,6 +32,7 @@ class DeviceScanProvider with ChangeNotifier {
   void onScanResult(List<ScanResult> scanResults) {
     scanResults.forEach((result){
       String name = result.device.name;
+//      print(name);
       if(name != null &&
          name.length > 0 &&
          !(this.scanResults.contains(result))){

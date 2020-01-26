@@ -33,7 +33,8 @@ class DeviceDataProvider with ChangeNotifier {
   bool autoScroll = true;
   String connectionButtonText = "Disconnect";
   bool connected = false;
-  StreamSubscription<List<int>> bluetoothDataubscription;
+  StreamSubscription<List<int>> bluetoothDataSubscription;
+  BluetoothCharacteristic rx;
 
   DateTime startTime;
   DateTime endTime;
@@ -44,6 +45,8 @@ class DeviceDataProvider with ChangeNotifier {
     if (!dataLoaded) {
       dataLoaded = true;
       connected = true;
+      connectionButtonText = "Disconnect";
+      notifyListeners();
       print("getting data");
       // get list of services from device
       List<BluetoothService> services = await device.discoverServices();
@@ -56,9 +59,9 @@ class DeviceDataProvider with ChangeNotifier {
           .characteristics;
 
       // get the Rx service by uts UUID
-      BluetoothCharacteristic rx = getRxCharacteristic(characteristics);
+      rx = getRxCharacteristic(characteristics);
 
-      bluetoothDataubscription = rx.value.listen(onDataReceived,
+      bluetoothDataSubscription = rx.value.listen(onDataReceived,
                                                  onError: onErrorReceivingData,
                                                  onDone: onDoneCalled
       );
@@ -66,6 +69,16 @@ class DeviceDataProvider with ChangeNotifier {
       // not sure what this does, but we don't get anything out of the device till this is set
       rx.setNotifyValue(true);
     }
+  }
+
+  Future<void> disconnect() async {
+    rx.setNotifyValue(false);
+    await device.disconnect();
+    bluetoothDataSubscription.cancel();
+    dataLoaded = false;
+    connectionButtonText = "Connect";
+    connected = false;
+    notifyListeners();
   }
 
   void clearData() {
@@ -77,28 +90,32 @@ class DeviceDataProvider with ChangeNotifier {
 
   void onDoneCalled(){
     print("on done called");
-    bluetoothDataubscription.cancel();
+    bluetoothDataSubscription.cancel();
   }
 
   void onDataReceived(List<int> value) {
     clearData();
     String data = utf8.decode(value);
-    print("Raw Data $data");
-    List<String> readings = data.split(",");
-    pH = double.parse(readings[0]);
-    temperature = double.parse(readings[1]);
-    battery = double.parse(readings[2]);
-    if (readings.length > 3) {
-      connectionTime = double.parse(readings[3]);
+    print("Raw Data $value");
+    if(data.contains(",")) {
+      List<String> readings = data.split(",");
+      pH = double.parse(readings[0]);
+      temperature = double.parse(readings[1]);
+      battery = double.parse(readings[2]);
+      if (readings.length > 3) {
+        connectionTime = double.parse(readings[3]);
+      }
+
+      insertData();
+
+
+      if (autoScroll) {
+        calculateMixMaxTimes();
+      }
+      notifyListeners();
+    }else{
+      print("Invalid data: $data");
     }
-
-    insertData();
-
-
-    if (autoScroll) {
-      calculateMixMaxTimes();
-    }
-    notifyListeners();
   }
 
   void insertData(){
@@ -123,7 +140,7 @@ class DeviceDataProvider with ChangeNotifier {
     error = true;
     errorMessage = error.toString();
     notifyListeners();
-    bluetoothDataubscription.cancel();
+    bluetoothDataSubscription.cancel();
   }
 
   BluetoothService getUartService(List<BluetoothService> services) =>
@@ -137,9 +154,6 @@ class DeviceDataProvider with ChangeNotifier {
               (c) =>
           c.uuid.toString() == StringUtils.RX_UUID);
 
-  Future<void> disconnect() async {
-    await device.disconnect();
-  }
 
   void increaseWidth() {
     width ++;
@@ -234,11 +248,12 @@ class DeviceDataProvider with ChangeNotifier {
   }
 
   Future<void> toggleDeviceState() async {
-    connected = false;
-    device.disconnect();
-    await bluetoothDataubscription.cancel();
-//    connectionButtonText = "Connect";
-//    notifyListeners();
+    if(connected) {
+      await disconnect();
+    }else{
+      print("Trying to connect");
+      await device.connect(timeout: Duration(seconds: 200), autoConnect: false);
+    }
   }
 
 

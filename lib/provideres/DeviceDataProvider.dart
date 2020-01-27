@@ -252,7 +252,7 @@ class DeviceDataProvider with ChangeNotifier {
       await disconnect();
     }else{
       print("Trying to connect");
-      await device.connect(timeout: Duration(seconds: 200), autoConnect: false);
+      await device.connect(timeout: Duration(seconds: 10), autoConnect: false);
     }
   }
 

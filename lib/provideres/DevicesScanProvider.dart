@@ -32,6 +32,7 @@ class DeviceScanProvider with ChangeNotifier {
   void onScanResult(List<ScanResult> scanResults) {
     scanResults.forEach((result){
       String name = result.device.name;
+//      print(name);
       if(name != null &&
          name.length > 0 &&
          !(this.scanResults.contains(result))){
@@ -62,9 +63,9 @@ class DeviceScanProvider with ChangeNotifier {
 
   void connectToDevice(BuildContext context, BluetoothDevice device) {
     _flutterBlue.stopScan();
-    if (Platform.isAndroid) {
-      sleep(const Duration(seconds: 1));
-    }
+//    if (Platform.isAndroid) {
+//      sleep(const Duration(seconds: 1));
+//    }
     Navigator.pushNamed(context, "/deviceDataScreen", arguments: device);
   }
 }

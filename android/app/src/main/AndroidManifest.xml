@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="flutter_blue_test_applciation"
+        android:label="Lura_Flutter_Blue"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

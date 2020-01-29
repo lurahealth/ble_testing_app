@@ -30,12 +30,20 @@ class ExportDialogProvider with ChangeNotifier{
     DBProvider db = DBProvider.db;
     List<Map<String, dynamic>> rows = await db.getDataByDateRange(fromInt, toInt);
     List<List<dynamic>> data = [];
-    data.add(["time","pH","temperature","battery","connection time","notes"]);
+    data.add(["time","Device_Id","pH","temperature","battery","connection time","notes"]);
     print(rows.length);
     rows.forEach((row){
       DateTime time = DateTime.fromMillisecondsSinceEpoch(row[StringUtils.TIME_STAMP]);
       String timeSTRING = StringUtils.dataTableTimeFormat.format(time);
-      data.add([timeSTRING,row[StringUtils.PH], row[StringUtils.TEMPERATURE], row[StringUtils.BATTERY], row[StringUtils.CONNETION_TIME], row[StringUtils.NOTES]]);
+      data.add([
+        timeSTRING,
+        row[StringUtils.DEVICE_ID],
+        row[StringUtils.PH],
+        row[StringUtils.TEMPERATURE],
+        row[StringUtils.BATTERY],
+        row[StringUtils.CONNETION_TIME],
+        row[StringUtils.NOTES]
+      ]);
     });
 
     String csv = const ListToCsvConverter().convert(data);

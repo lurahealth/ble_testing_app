@@ -7,14 +7,15 @@ class DataModel{
   final num connectionTime;
   final DateTime timeStamp;
   final String notes;
+  final String deviceId;
 
-  // add notes column to the table
   DataModel(this.pH,
             this.battery,
             this.temperature,
             this.connectionTime,
             this.timeStamp,
-            this.notes);
+            this.notes,
+            this.deviceId);
 
   Map<String, dynamic> toMap(){
     return {
@@ -23,7 +24,8 @@ class DataModel{
       StringUtils.TEMPERATURE: temperature,
       StringUtils.CONNETION_TIME: connectionTime,
       StringUtils.TIME_STAMP: timeStamp.millisecondsSinceEpoch,
-      StringUtils.NOTES: notes
+      StringUtils.NOTES: notes,
+      StringUtils.DEVICE_ID: deviceId
     };
   }
 
@@ -34,7 +36,8 @@ class DataModel{
       map[StringUtils.TEMPERATURE],
       map[StringUtils.CONNETION_TIME],
       DateTime.fromMillisecondsSinceEpoch(map[StringUtils.TIME_STAMP]),
-      map[StringUtils.NOTES]
+      map[StringUtils.NOTES],
+      map[StringUtils.DEVICE_ID]
     );
   }
 }

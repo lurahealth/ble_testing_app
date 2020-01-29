@@ -10,6 +10,7 @@ import 'package:flutter_blue_test_applciation/utils/StringUtils.dart';
 
 class DeviceDataProvider with ChangeNotifier {
   final BluetoothDevice device;
+  final String deviceName;
   double pH;
   double temperature;
 
@@ -39,7 +40,7 @@ class DeviceDataProvider with ChangeNotifier {
   DateTime startTime;
   DateTime endTime;
 
-  DeviceDataProvider(this.device);
+  DeviceDataProvider(this.device, this.deviceName);
 
   Future<void> getData() async {
     if (!dataLoaded) {
@@ -108,7 +109,6 @@ class DeviceDataProvider with ChangeNotifier {
 
       insertData();
 
-
       if (autoScroll) {
         calculateMixMaxTimes();
       }
@@ -122,7 +122,7 @@ class DeviceDataProvider with ChangeNotifier {
     DateTime now = DateTime.now();
     setStartAndEndTime(now);
     DataModel dataModel = new DataModel(
-        pH, battery, temperature, connectionTime, now, notes);
+        pH, battery, temperature, connectionTime, now, notes, deviceName);
     if(notes != null){
       print(notes);
     }
@@ -255,7 +255,4 @@ class DeviceDataProvider with ChangeNotifier {
       await device.connect(timeout: Duration(seconds: 10), autoConnect: false);
     }
   }
-
-
-
 }

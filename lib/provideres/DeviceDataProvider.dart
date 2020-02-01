@@ -6,6 +6,7 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_blue_test_applciation/models/DataModel.dart';
 import 'package:flutter_blue_test_applciation/models/SplineData.dart';
 import 'package:flutter_blue_test_applciation/utils/DatabaseProvider.dart';
+import 'package:flutter_blue_test_applciation/utils/RestEndpoints.dart';
 import 'package:flutter_blue_test_applciation/utils/StringUtils.dart';
 
 class DeviceDataProvider with ChangeNotifier {
@@ -106,8 +107,15 @@ class DeviceDataProvider with ChangeNotifier {
       if (readings.length > 3) {
         connectionTime = double.parse(readings[3]);
       }
+      DateTime now = new DateTime.now();
+      DataModel dataModel = new DataModel(
+          pH, battery, temperature, connectionTime, now, notes, deviceName);
+      if(notes != null){
+        print(notes);
+      }
 
-      insertData();
+      insertData(dataModel);
+      uploadData(dataModel);
 
       if (autoScroll) {
         calculateMixMaxTimes();
@@ -118,14 +126,14 @@ class DeviceDataProvider with ChangeNotifier {
     }
   }
 
-  void insertData(){
+  void uploadData(DataModel dataModel) {
+    RestEndpoints.uploadData(dataModel);
+  }
+
+  void insertData(DataModel dataModel){
     DateTime now = DateTime.now();
     setStartAndEndTime(now);
-    DataModel dataModel = new DataModel(
-        pH, battery, temperature, connectionTime, now, notes, deviceName);
-    if(notes != null){
-      print(notes);
-    }
+
     DBProvider.db.insertSensorData(dataModel);
     notes = null;
     allData.insert(0, dataModel);
@@ -255,4 +263,6 @@ class DeviceDataProvider with ChangeNotifier {
       await device.connect(timeout: Duration(seconds: 10), autoConnect: false);
     }
   }
+
+
 }

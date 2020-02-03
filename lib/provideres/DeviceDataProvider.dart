@@ -27,7 +27,7 @@ class DeviceDataProvider with ChangeNotifier {
   bool error = false;
   String errorMessage = "";
   double animationDuration = 0;
-  int width = 20;
+  int width = 20;// seconds
   static DateTime currentTime = DateTime.now();
   DateTime min = currentTime;
   DateTime max = currentTime.add(Duration(seconds: 5));

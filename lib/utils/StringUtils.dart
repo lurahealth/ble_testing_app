@@ -38,7 +38,7 @@ class StringUtils{
 
   // Time format
   static final DateFormat dataTableTimeFormat = DateFormat("HH:mm:ss");
-  static final DateFormat csvDateTimeFormat = DateFormat("dd.MMMMM HH:mm:ss");
+  static final DateFormat csvDateTimeFormat = DateFormat("dd.MMMM.yyyy HH:mm");
 
   //Style
   static final TextStyle style = TextStyle(fontSize: 15);

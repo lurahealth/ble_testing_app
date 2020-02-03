@@ -25,7 +25,7 @@ class DeviceScanWidget extends StatelessWidget {
         title: new Text("Device scan"),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.share),
+            icon: Icon(Icons.share, color: Colors.deepOrange,),
             onPressed: () async {
               await _exportDateRange(context);
             },

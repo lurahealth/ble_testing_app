@@ -1,6 +1,6 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_test_applciation/provideres/ExportDIalogProvider.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -11,57 +11,51 @@ class ExportDialog extends StatelessWidget {
 
     final ExportDialogProvider provider = Provider.of<ExportDialogProvider>(context);
 
-    final format = DateFormat("yyyy-MM-dd HH:mm");
+    var fromDateTextEditingController = TextEditingController( text: provider.fromDateString);
 
-    final fromDateField = DateTimeField(
-      onChanged: provider.setFromDate ,
-      decoration: InputDecoration(
-          labelText: "From",
-      ),
-      format: format,
-      onShowPicker: (context, currentValue) async {
-        final date = await showDatePicker(
-            context: context,
-            firstDate: DateTime(1900),
-            initialDate: currentValue ?? DateTime.now(),
-            lastDate: DateTime(2100));
-        if (date != null) {
-          final time = await showTimePicker(
-            context: context,
-            initialTime:
-            TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-          );
-          return DateTimeField.combine(date, time);
-        } else {
-          return currentValue;
-        }
-      },
-    );
+    final fromDateField = TextField(
+        controller: fromDateTextEditingController,
+        decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.calendar_today,
+            ),
+            border: OutlineInputBorder(),
+            hintText: "Enter from date",
+            labelText: "From Date",
+        ),
+        onTap: () {
+          {
+            DatePicker.showDateTimePicker(context, showTitleActions: true,
+                onConfirm: (date) {
+                  fromDateTextEditingController.text = "From Date";
+                  provider.setFromDate(date);
+                });
+          }
+        },
+        readOnly: true);
 
-    final toDateField = DateTimeField(
-      onChanged: provider.setToDate ,
-      decoration: InputDecoration(
-        labelText: "To",
-      ),
-      format: format,
-      onShowPicker: (context, currentValue) async {
-        final date = await showDatePicker(
-            context: context,
-            firstDate: DateTime(1900),
-            initialDate: currentValue ?? DateTime.now(),
-            lastDate: DateTime(2100));
-        if (date != null) {
-          final time = await showTimePicker(
-            context: context,
-            initialTime:
-            TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-          );
-          return DateTimeField.combine(date, time);
-        } else {
-          return currentValue;
-        }
-      },
-    );
+    var toDateTextEditingController = TextEditingController( text: provider.toDateString);
+
+    final toDateField = TextField(
+        controller: toDateTextEditingController,
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.calendar_today,
+          ),
+          border: OutlineInputBorder(),
+          hintText: "Enter to date",
+          labelText: "To Date",
+        ),
+        onTap: () {
+          {
+            DatePicker.showDateTimePicker(context, showTitleActions: true,
+                onConfirm: (date) {
+                  fromDateTextEditingController.text = "To Date";
+                  provider.setToDate(date);
+                });
+          }
+        },
+        readOnly: true);
 
     final exportButton = FlatButton(
       onPressed: () => provider.exportData(context),
@@ -72,6 +66,7 @@ class ExportDialog extends StatelessWidget {
           Text(
             "Export Data",
             textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.deepOrangeAccent,),
           ),
         ],
       ),
@@ -86,6 +81,7 @@ class ExportDialog extends StatelessWidget {
           Text(
             "Cancel",
             textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.deepOrangeAccent,),
           ),
         ],
       ),

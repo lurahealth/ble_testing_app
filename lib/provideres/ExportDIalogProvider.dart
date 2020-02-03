@@ -10,15 +10,21 @@ import 'package:path_provider/path_provider.dart';
 
 class ExportDialogProvider with ChangeNotifier{
   DateTime from;
+  String fromDateString;
   DateTime to;
+  String toDateString;
   bool exporting = false;
 
   void setFromDate(DateTime value){
     this.from = value;
+    fromDateString = StringUtils.csvDateTimeFormat.format(from);
+    notifyListeners();
   }
 
   void setToDate(DateTime value){
     this.to = value;
+    toDateString = StringUtils.csvDateTimeFormat.format(to);
+    notifyListeners();
   }
 
   Future<void> exportData(BuildContext context) async {

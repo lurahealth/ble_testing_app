@@ -6,10 +6,12 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_blue_test_applciation/models/DataModel.dart';
 import 'package:flutter_blue_test_applciation/models/SplineData.dart';
 import 'package:flutter_blue_test_applciation/utils/DatabaseProvider.dart';
+import 'package:flutter_blue_test_applciation/utils/RestEndpoints.dart';
 import 'package:flutter_blue_test_applciation/utils/StringUtils.dart';
 
 class DeviceDataProvider with ChangeNotifier {
   final BluetoothDevice device;
+  final String deviceName;
   double pH;
   double temperature;
 
@@ -25,7 +27,7 @@ class DeviceDataProvider with ChangeNotifier {
   bool error = false;
   String errorMessage = "";
   double animationDuration = 0;
-  int width = 5;
+  int width = 20;// seconds
   static DateTime currentTime = DateTime.now();
   DateTime min = currentTime;
   DateTime max = currentTime.add(Duration(seconds: 5));
@@ -39,7 +41,7 @@ class DeviceDataProvider with ChangeNotifier {
   DateTime startTime;
   DateTime endTime;
 
-  DeviceDataProvider(this.device);
+  DeviceDataProvider(this.device, this.deviceName);
 
   Future<void> getData() async {
     if (!dataLoaded) {
@@ -90,7 +92,7 @@ class DeviceDataProvider with ChangeNotifier {
 
   void onDoneCalled(){
     print("on done called");
-    bluetoothDataSubscription.cancel();
+    disconnect();
   }
 
   void onDataReceived(List<int> value) {
@@ -105,9 +107,15 @@ class DeviceDataProvider with ChangeNotifier {
       if (readings.length > 3) {
         connectionTime = double.parse(readings[3]);
       }
+      DateTime now = new DateTime.now();
+      DataModel dataModel = new DataModel(
+          pH, battery, temperature, connectionTime, now, notes, deviceName);
+      if(notes != null){
+        print(notes);
+      }
 
-      insertData();
-
+      insertData(dataModel);
+      uploadData(dataModel);
 
       if (autoScroll) {
         calculateMixMaxTimes();
@@ -118,14 +126,14 @@ class DeviceDataProvider with ChangeNotifier {
     }
   }
 
-  void insertData(){
+  void uploadData(DataModel dataModel) {
+    RestEndpoints.uploadData(dataModel);
+  }
+
+  void insertData(DataModel dataModel){
     DateTime now = DateTime.now();
     setStartAndEndTime(now);
-    DataModel dataModel = new DataModel(
-        pH, battery, temperature, connectionTime, now, notes);
-    if(notes != null){
-      print(notes);
-    }
+
     DBProvider.db.insertSensorData(dataModel);
     notes = null;
     allData.insert(0, dataModel);
@@ -255,7 +263,6 @@ class DeviceDataProvider with ChangeNotifier {
       await device.connect(timeout: Duration(seconds: 10), autoConnect: false);
     }
   }
-
 
 
 }

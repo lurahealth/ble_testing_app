@@ -10,15 +10,21 @@ import 'package:path_provider/path_provider.dart';
 
 class ExportDialogProvider with ChangeNotifier{
   DateTime from;
+  String fromDateString;
   DateTime to;
+  String toDateString;
   bool exporting = false;
 
   void setFromDate(DateTime value){
     this.from = value;
+    fromDateString = StringUtils.csvDateTimeFormat.format(from);
+    notifyListeners();
   }
 
   void setToDate(DateTime value){
     this.to = value;
+    toDateString = StringUtils.csvDateTimeFormat.format(to);
+    notifyListeners();
   }
 
   Future<void> exportData(BuildContext context) async {
@@ -30,12 +36,20 @@ class ExportDialogProvider with ChangeNotifier{
     DBProvider db = DBProvider.db;
     List<Map<String, dynamic>> rows = await db.getDataByDateRange(fromInt, toInt);
     List<List<dynamic>> data = [];
-    data.add(["time","pH","temperature","battery","connection time","notes"]);
+    data.add(["time","Device_Id","pH","temperature","battery","connection time","notes"]);
     print(rows.length);
     rows.forEach((row){
       DateTime time = DateTime.fromMillisecondsSinceEpoch(row[StringUtils.TIME_STAMP]);
       String timeSTRING = StringUtils.dataTableTimeFormat.format(time);
-      data.add([timeSTRING,row[StringUtils.PH], row[StringUtils.TEMPERATURE], row[StringUtils.BATTERY], row[StringUtils.CONNETION_TIME], row[StringUtils.NOTES]]);
+      data.add([
+        timeSTRING,
+        row[StringUtils.DEVICE_ID],
+        row[StringUtils.PH],
+        row[StringUtils.TEMPERATURE],
+        row[StringUtils.BATTERY],
+        row[StringUtils.CONNETION_TIME],
+        row[StringUtils.NOTES]
+      ]);
     });
 
     String csv = const ListToCsvConverter().convert(data);

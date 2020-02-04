@@ -7,7 +7,9 @@ import 'package:sqflite/sqflite.dart';
 
 class DBProvider {
 
-  int CURRENT_DB_VERSION = 1;
+  int CURRENT_DB_VERSION = 4;
+  // No v2 OR V3 because I screwed up the update.
+  // Change log for v4: Adding the device_id column
 
   static Database _database;
   static final DBProvider db = DBProvider._();
@@ -30,6 +32,9 @@ class DBProvider {
     return await openDatabase(path, version: CURRENT_DB_VERSION, onOpen: (db) {
     }, onCreate: (Database db, int version) async {
       await db.execute(StringUtils.CREATE_TABLE_QUERY);
+    }, onUpgrade: (Database db, int oldVersion, int newVersion) async {
+      print("Updating DB");
+      await db.execute(StringUtils.V1_TO_V4_UPDATE_QUERY);
     });
   }
 

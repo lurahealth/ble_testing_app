@@ -24,7 +24,7 @@ class DeviceDateScreen extends StatelessWidget {
             create: (_) => DeviceStateProvider(device).connectToDevice(),
             initialData: BluetoothDeviceState.connecting),
         ChangeNotifierProvider(
-          create: (_) => DeviceDataProvider(device),
+          create: (_) => DeviceDataProvider(device, device.name),
         )
       ],
       child: DeviceDateWidget(),

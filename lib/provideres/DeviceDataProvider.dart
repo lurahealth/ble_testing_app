@@ -92,7 +92,7 @@ class DeviceDataProvider with ChangeNotifier {
 
   void onDoneCalled(){
     print("on done called");
-    bluetoothDataSubscription.cancel();
+    disconnect();
   }
 
   void onDataReceived(List<int> value) {

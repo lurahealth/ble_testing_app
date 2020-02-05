@@ -109,13 +109,13 @@ class DeviceDataProvider with ChangeNotifier {
       }
       DateTime now = new DateTime.now();
       DataModel dataModel = new DataModel(
-          pH, battery, temperature, connectionTime, now, notes, deviceName);
+          pH, battery, temperature, connectionTime, now, notes, deviceName, false);
       if(notes != null){
         print(notes);
       }
 
       insertData(dataModel);
-      uploadData(dataModel);
+//      uploadData(dataModel);
 
       if (autoScroll) {
         calculateMixMaxTimes();

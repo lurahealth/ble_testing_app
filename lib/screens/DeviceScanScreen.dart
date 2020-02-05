@@ -22,6 +22,7 @@ class DeviceScanWidget extends StatelessWidget {
     final provider = Provider.of<DeviceScanProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF405280),
         title: new Text("Device scan"),
         actions: <Widget>[
           IconButton(

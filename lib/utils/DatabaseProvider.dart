@@ -5,16 +5,17 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DBProvider {
+class DatabaseProvider {
 
-  int CURRENT_DB_VERSION = 4;
+  int CURRENT_DB_VERSION = 5;
   // No v2 OR V3 because I screwed up the update.
   // Change log for v4: Adding the device_id column
+  // Change log for v5: Adding uploaded column
 
   static Database _database;
-  static final DBProvider db = DBProvider._();
+  static final DatabaseProvider db = DatabaseProvider._();
 
-  DBProvider._();
+  DatabaseProvider._();
 
   Future<Database> get database async {
     // If database exists, return database
@@ -32,10 +33,18 @@ class DBProvider {
     return await openDatabase(path, version: CURRENT_DB_VERSION, onOpen: (db) {
     }, onCreate: (Database db, int version) async {
       await db.execute(StringUtils.CREATE_TABLE_QUERY);
-    }, onUpgrade: (Database db, int oldVersion, int newVersion) async {
-      print("Updating DB");
-      await db.execute(StringUtils.V1_TO_V4_UPDATE_QUERY);
-    });
+    }, onUpgrade: onUpgrade);
+  }
+
+  void onUpgrade (Database db, int oldVersion, int newVersion) async {
+    print("Updating DB");
+    if(oldVersion == 1){
+      print("Updating DB from v1 to v5");
+      await db.execute(StringUtils.V1_TO_V5_UPDATE_QUERY);
+    }else if (oldVersion == 4) {
+      print("Updating DB from v4 to v5");
+      await db.execute(StringUtils.V4_TO_V5_UPDATE_QUERY);
+    }
   }
 
   Future insertSensorData(DataModel dataModel) async {

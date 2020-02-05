@@ -34,7 +34,7 @@ class ExportDialogProvider with ChangeNotifier{
     int fromInt = from.millisecondsSinceEpoch;
     int toInt = to.millisecondsSinceEpoch;
 
-    DBProvider db = DBProvider.db;
+    DatabaseProvider db = DatabaseProvider.db;
     List<Map<String, dynamic>> rows = await db.getDataByDateRange(fromInt, toInt);
     List<List<dynamic>> data = [];
     data.add(["time","Device_Id","pH","temperature","battery","connection time","notes"]);

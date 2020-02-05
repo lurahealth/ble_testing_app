@@ -134,7 +134,7 @@ class DeviceDataProvider with ChangeNotifier {
     DateTime now = DateTime.now();
     setStartAndEndTime(now);
 
-    DBProvider.db.insertSensorData(dataModel);
+    DatabaseProvider.db.insertSensorData(dataModel);
     notes = null;
     allData.insert(0, dataModel);
     temperatureData.add(SplineData.fromLiveData(now, temperature));

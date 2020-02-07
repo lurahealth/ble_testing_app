@@ -53,10 +53,25 @@ class DatabaseProvider {
   }
 
   Future<List<Map<String, dynamic>>> getDataByDateRange(int from, int to) async {
-
     final db = await database;
     String query = "SELECT * FROM ${StringUtils.TABLE_NAME} WHERE ${StringUtils.TIME_STAMP} >= $from and ${StringUtils.TIME_STAMP} <= $to";
     print(query);
     return await db.rawQuery(query);
+  }
+
+  Future<List<Map<String, dynamic>>> getUnUploadedData() async {
+    final db = await database;
+    String query = "SELECT * FROM ${StringUtils.TABLE_NAME} WHERE ${StringUtils.UPLOADED} = 0";
+    print(query);
+    return await db.rawQuery(query);
+  }
+
+  Future markUploaded(List<Map<String, dynamic>> updateList) async {
+    final db = await database;
+    Batch batch = db.batch();
+    updateList.forEach((updateItem){
+      batch.update(StringUtils.TABLE_NAME, updateItem);
+    });
+    return await batch.commit(continueOnError: true);
   }
 }

@@ -53,4 +53,7 @@ class StringUtils{
 
   //Style
   static final TextStyle style = TextStyle(fontSize: 15);
+
+  // Android periodic task
+  static const ANDROID_PERIODIC_TASK = "android_periodic_task";
 }

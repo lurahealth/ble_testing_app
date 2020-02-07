@@ -3,11 +3,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_blue_test_applciation/background_processes/BackgroundUpload.dart';
+import 'package:flutter_blue_test_applciation/main.dart';
 import 'package:flutter_blue_test_applciation/models/DataModel.dart';
 import 'package:flutter_blue_test_applciation/models/SplineData.dart';
 import 'package:flutter_blue_test_applciation/utils/DatabaseProvider.dart';
-import 'package:flutter_blue_test_applciation/utils/RestEndpoints.dart';
 import 'package:flutter_blue_test_applciation/utils/StringUtils.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:workmanager/workmanager.dart';
 
 class DeviceDataProvider with ChangeNotifier {
   final BluetoothDevice device;
@@ -45,6 +48,7 @@ class DeviceDataProvider with ChangeNotifier {
 
   Future<void> getData() async {
     if (!dataLoaded) {
+      registerWorkManager();
       dataLoaded = true;
       connected = true;
       connectionButtonText = "Disconnect";
@@ -80,6 +84,7 @@ class DeviceDataProvider with ChangeNotifier {
     dataLoaded = false;
     connectionButtonText = "Connect";
     connected = false;
+    Workmanager.cancelAll();
     notifyListeners();
   }
 
@@ -98,7 +103,7 @@ class DeviceDataProvider with ChangeNotifier {
   void onDataReceived(List<int> value) {
     clearData();
     String data = utf8.decode(value);
-    print("Raw Data $value");
+//    print("Raw Data $value");
     if(data.contains(",")) {
       List<String> readings = data.split(",");
       pH = double.parse(readings[0]);
@@ -126,9 +131,9 @@ class DeviceDataProvider with ChangeNotifier {
     }
   }
 
-  void uploadData(DataModel dataModel) {
-    RestEndpoints.uploadData(dataModel);
-  }
+//  void uploadData(DataModel dataModel) {
+//    RestEndpoints.uploadData(dataModel);
+//  }
 
   void insertData(DataModel dataModel){
     DateTime now = DateTime.now();
@@ -262,6 +267,22 @@ class DeviceDataProvider with ChangeNotifier {
       print("Trying to connect");
       await device.connect(timeout: Duration(seconds: 10), autoConnect: false);
     }
+  }
+
+  void registerWorkManager() {
+
+    print("registering work manager");
+
+    Workmanager.initialize(
+        callbackDispatcher, // The top level function, aka callbackDispatcher
+        isInDebugMode: true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+    );
+    Workmanager
+        .registerPeriodicTask(StringUtils.ANDROID_PERIODIC_TASK,
+                              StringUtils.ANDROID_PERIODIC_TASK,
+                              frequency: Duration(minutes: 1),
+      inputData: {"dir": getApplicationDocumentsDirectory()}
+    );
   }
 
 

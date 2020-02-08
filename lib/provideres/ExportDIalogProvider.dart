@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:csv/csv.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
@@ -59,9 +60,10 @@ class ExportDialogProvider with ChangeNotifier{
     exporting = false;
     notifyListeners();
 
-    final ByteData bytes = await rootBundle.load(file.path);
+    //final ByteData bytes = await rootBundle.load(file.path);
+    final Uint8List bytes = file.readAsBytesSync();
 
-    await Share.file('Csv export', 'csv.txt', bytes.buffer.asUint8List(), 'text/csv');
+    await Share.file('Csv export', 'csv.txt', bytes, 'text/csv');
 
     Navigator.pop(context);
 

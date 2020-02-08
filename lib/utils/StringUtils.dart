@@ -9,8 +9,8 @@ class StringUtils{
 
   // columns names
   static final String ROW_ID = "row_id";
-  static final String PH = "pH";
-  static final String BATTERY = "batery";
+  static final String PH = "ph";
+  static final String BATTERY = "battery";
   static final String TEMPERATURE = "temperature";
   static final String CONNETION_TIME = "connection_time";
   static final String TIME_STAMP = "time_stamp";

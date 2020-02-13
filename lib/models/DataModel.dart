@@ -23,7 +23,7 @@ class DataModel{
       StringUtils.BATTERY: battery,
       StringUtils.TEMPERATURE: temperature,
       StringUtils.CONNETION_TIME: connectionTime,
-      StringUtils.TIME_STAMP: timeStamp.millisecondsSinceEpoch,
+      StringUtils.TIME_STAMP: (timeStamp.millisecondsSinceEpoch/1000000.0),
       StringUtils.NOTES: notes,
       StringUtils.DEVICE_ID: deviceId
     };
